@@ -1,189 +1,180 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Conversor IP & Máscara — Binário / Decimal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversor IP e Máscara</title>
+
+  <!-- Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#7c3aed;--muted:#94a3b8;--glass: rgba(255,255,255,0.03)}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial;min-height:100vh;background:linear-gradient(180deg,#051025 0%, #0b1320 60%);color:#e6eef8;display:flex;align-items:center;justify-content:center;padding:32px}
-    .wrap{width:100%;max-width:980px}
-    header{display:flex;gap:16px;align-items:center;margin-bottom:20px}
-    header h1{margin:0;font-size:20px}
-    header p{margin:0;color:var(--muted);font-size:13px}
-
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:20px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
-
-    .controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .controls input[type="text"], .controls input[type="number"]{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:12px 14px;border-radius:10px;color:inherit;min-width:220px}
-    .controls label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-    .controls .group{display:flex;flex-direction:column}
-
-    .results{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
-    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
-    .panel h3{margin:0 0 8px 0;font-size:14px}
-
-    table{width:100%;border-collapse:collapse;font-family:monospace}
-    td, th{padding:8px 6px;border-bottom:1px dashed rgba(255,255,255,0.03);font-size:13px}
-    th{color:var(--muted);text-align:left}
-
-    .octet-binary{font-family:monospace;background:rgba(255,255,255,0.02);padding:6px;border-radius:6px;display:inline-block}
-    .muted{color:var(--muted);font-size:13px}
-    .footer{margin-top:14px;color:var(--muted);font-size:13px}
-
-    .bad{color:#ff6b6b}
-    .good{color:#7ee787}
-
-    @media(max-width:720px){
-      .results{grid-template-columns:1fr}
-      header{flex-direction:column;align-items:flex-start;gap:6px}
+    body { background:#0d1117; color:white; }
+    .card { background:#161b22 !important; }
+    .binary-box {
+      font-family: monospace;
+      padding: 12px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 6px;
+      margin-top:10px;
+      width:100%;
+      text-align:center;
+      word-break:break-all;
+      font-size:14px;
     }
-
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700;color:white}
-    .hint{font-size:12px;color:var(--muted);margin-top:6px}
+    .octet-wrapper {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:16px;
+      margin-bottom:22px;
+      min-height:140px;
+    }
+    .octet-number {
+      font-size: 13px;
+      color:#9ca3af;
+      margin-bottom:4px;
+    }
+    .octet-decimal { font-size:16px; font-weight:600; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="logo">IP</div>
-      <div>
-        <h1>Conversor IP — Octetos & Máscara em Binário</h1>
-        <p>Digite um IP e máscara para ver os octetos em binário e a máscara em binário e decimal.</p>
-      </div>
-    </header>
+  <div class="container">
+    <h4 class="center">Conversor IP → Binário + Máscara</h4>
 
     <div class="card">
-      <div class="controls">
-        <div class="group">
-          <label for="input">IP (aceita: <code>192.168.1.10/24</code> ou <code>192.168.1.10 255.255.255.0</code>)</label>
-          <input id="input" type="text" placeholder="ex: 192.168.0.10/24" value="">
-          <span class="hint">Você também pode digitar o IP e a máscara separados por espaço.</span>
+      <div class="card-content">
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="input" type="text" placeholder="192.168.0.10/24 ou 192.168.0.10 255.255.255.0" />
+            <label for="input"  class="active">IP + máscara</label>
+          </div>
+
+          <div class="input-field col s12 m4">
+            <input id="maskInput" type="text" placeholder="/24 ou 255.255.255.0" />
+            <label for="maskInput"  class="active">Máscara (opcional)</label>
+          </div>
+
+          <div class="col s12 m2">
+            <button id="btn" class="btn purple darken-2 waves-effect waves-light" style="width:100%; margin-top:20px;">Converter</button>
+          </div>
         </div>
 
-        <div class="group">
-          <label for="maskInput">OU: Máscara (opcional, prefixo ou decimal)</label>
-          <input id="maskInput" type="text" placeholder="/24 ou 255.255.255.0">
-          <span class="hint">Se deixar vazio, use o sufixo /xx no campo IP.</span>
-        </div>
+        <div id="error" class="red-text"></div>
 
-        <div style="display:flex;align-items:flex-end">
-          <button id="btn" style="padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#06b6d4);color:white;cursor:pointer">Converter</button>
-        </div>
+        <h5>IP em Decimal + Binário</h5>
+        <div id="ipBox" class="row">Nenhum dado ainda</div>
+
+        <h5>Máscara</h5>
+        <div id="maskBox" class="row">Nenhum dado ainda</div>
+
       </div>
-
-      <div id="error" class="muted"></div>
-
-      <div class="results" style="margin-top:12px">
-        <div class="panel">
-          <h3>IP — Octetos (decimal & binário)</h3>
-          <table>
-            <thead>
-              <tr><th>Octeto</th><th>Decimal</th><th>Binário (8 bits)</th></tr>
-            </thead>
-            <tbody id="ipTable">
-              <tr><td colspan="3" class="muted">Nenhum input ainda</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="panel">
-          <h3>Máscara de Sub‑rede</h3>
-          <table>
-            <thead>
-              <tr><th>Forma</th><th>Valor</th></tr>
-            </thead>
-            <tbody id="maskTable">
-              <tr><td colspan="2" class="muted">Nenhum input ainda</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="footer">Dicas: insira <code>IP/Prefixo</code> (ex.: <code>10.0.0.5/16</code>) ou <code>IP Espaço Máscara</code> (ex.: <code>10.0.0.5 255.255.0.0</code>).</div>
     </div>
   </div>
 
-<script>
-  // Helpers
-  const $ = id => document.getElementById(id);
-  function isValidOctet(n){return Number.isInteger(n)&&n>=0&&n<=255}
-  function pad8(n){return n.toString(2).padStart(8,'0')}
-  function ipToArray(str){ const parts = str.trim().split('.'); if(parts.length!==4) return null; const nums = parts.map(s=>Number(s)); if(nums.some(n=>!Number.isInteger(n))) return null; if(nums.some(n=>n<0||n>255)) return null; return nums }
+  <script>
+    const $ = id => document.getElementById(id);
+    const pad8 = n => n.toString(2).padStart(8, '0');
 
-  function prefixToMask(prefix){ if(prefix<0||prefix>32) return null; const mask32 = (prefix===0)?0: (0xFFFFFFFF << (32-prefix)) >>> 0; return [(mask32>>>24)&0xFF, (mask32>>>16)&0xFF, (mask32>>>8)&0xFF, mask32&0xFF]; }
-  function maskArrayToPrefix(arr){ const bin = arr.map(n=>pad8(n)).join(''); const ones = bin.indexOf('0'); if(ones===-1) return 32; return bin.slice(0,ones).split('').filter(x=>x==='1').length }
-
-  function parseInput(rawIP, rawMask){
-    rawIP = (rawIP||'').trim(); rawMask = (rawMask||'').trim();
-    if(!rawIP && !rawMask) return {error:'Digite um IP (ex: 192.168.1.5/24)'};
-
-    // Try to extract ip and optional /prefix from rawIP
-    let ipPart = rawIP;
-    let prefix = null;
-    if(rawIP.includes('/')){
-      const [a,b] = rawIP.split('/').map(s=>s.trim()); ipPart=a; if(b!==undefined && b!=='') prefix = Number(b);
+    function ipToArr(ip){
+      const p = ip.trim().split('.');
+      if(p.length !== 4) return null;
+      const n = p.map(Number);
+      if(n.some(x => x < 0 || x > 255 || isNaN(x))) return null;
+      return n;
     }
 
-    // If rawMask provided and looks like /xx
-    if(rawMask.startsWith('/')){ const p = Number(rawMask.slice(1)); if(!Number.isInteger(p)) return {error:'Prefixo inválido'}; prefix = p; rawMask=''; }
+    function prefixToMask(prefix){
+      if(prefix < 0 || prefix > 32) return null;
+      const m = prefix === 0 ? 0 : (0xFFFFFFFF << (32-prefix)) >>> 0;
+      return [ (m>>>24)&255, (m>>>16)&255, (m>>>8)&255, m&255 ];
+    }
 
-    // If rawMask is dotted mask
-    let maskArr = null;
-    if(rawMask && rawMask.includes('.')){ maskArr = ipToArray(rawMask); if(!maskArr) return {error:'Máscara em decimal inválida'}; prefix = maskArrayToPrefix(maskArr); }
+    function maskArrToPrefix(arr){
+      const b = arr.map(pad8).join('');
+      return b.indexOf('0') === -1 ? 32 : b.slice(0, b.indexOf('0')).length;
+    }
 
-    // If ipPart contains space separated mask (e.g. "1.2.3.4 255.255.0.0")
-    if(ipPart.includes(' ')){
-      const parts = ipPart.split(' ').filter(Boolean);
-      ipPart = parts[0];
-      if(parts[1]){
-        if(parts[1].includes('.')){ maskArr = ipToArray(parts[1]); if(!maskArr) return {error:'Máscara no campo IP inválida'}; prefix = maskArrayToPrefix(maskArr); }
-        else if(parts[1].startsWith('/')){ prefix = Number(parts[1].slice(1)); }
-        else if(parts[1]!=='') { const p = Number(parts[1]); if(Number.isInteger(p) && p>=0 && p<=32) prefix = p; }
+    function parse(rawIP, rawMask){
+      rawIP = rawIP.trim(); rawMask = rawMask.trim();
+      if(!rawIP) return {error:"Digite um IP válido."};
+
+      let ipPart = rawIP;
+      let prefix = null;
+      let maskArr = null;
+
+      if(rawIP.includes('/')){
+        const [base, p] = rawIP.split('/');
+        ipPart = base;
+        prefix = Number(p);
       }
+
+      if(rawMask.startsWith('/')) prefix = Number(rawMask.slice(1));
+      else if(rawMask.includes('.')){
+        maskArr = ipToArr(rawMask);
+        if(!maskArr) return {error:"Máscara inválida"};
+        prefix = maskArrToPrefix(maskArr);
+      }
+
+      if(ipPart.includes(' ')){
+        const parts = ipPart.split(' ').filter(Boolean);
+        ipPart = parts[0];
+        if(parts[1]){
+          if(parts[1].includes('.')){
+            maskArr = ipToArr(parts[1]);
+            prefix = maskArrToPrefix(maskArr);
+          } else if(parts[1].startsWith('/')) prefix = Number(parts[1].slice(1));
+          else prefix = Number(parts[1]);
+        }
+      }
+
+      const ipArr = ipToArr(ipPart);
+      if(!ipArr) return {error:"IP inválido."};
+
+      if(prefix === null || prefix < 0 || prefix > 32) return {error:"Prefixo inválido."};
+
+      return { ip: ipArr, prefix, mask: prefixToMask(prefix) };
     }
 
-    const ipArr = ipToArray(ipPart);
-    if(!ipArr) return {error:'IP inválido. Use o formato a.b.c.d'};
+    function render(r){
+      const boxIP = $('ipBox');
+      const boxMask = $('maskBox');
+      const err = $('error');
 
-    if(prefix===null){ return {error:'Máscara não informada. Use "/24" no IP ou preencha o campo máscara.'} }
-    if(!Number.isInteger(prefix) || prefix<0 || prefix>32) return {error:'Prefixo inválido. Deve estar entre 0 e 32.'}
+      err.textContent = "";
+      if(r.error){ err.textContent = r.error; boxIP.textContent=""; boxMask.textContent=""; return; }
 
-    const maskFromPrefix = prefixToMask(prefix);
+      // Render IP decimal + binário
+      boxIP.innerHTML = '';
+      r.ip.forEach((o,i)=>{
+        boxIP.innerHTML += `
+          <div class='col s6 m3 octet-wrapper'>
+            <div class='octet-number'>Octeto ${i+1}</div>
+            <div class='octet-decimal'>${o}</div>
+            <div class='binary-box'>${pad8(o)}</div>
+          </div>`;
+      });
 
-    return {ip:ipArr, prefix, mask:maskFromPrefix};
-  }
+      // Render máscara
+      const dotted = r.mask.join('.')
+      boxMask.innerHTML = `
+        <div class='col s12'>Prefixo: <b>/${r.prefix}</b></div>
+        <div class='col s12'>Máscara decimal: <b>${dotted}</b></div>
+        <div class='col s12 row'>
+          ${r.mask.map((m,i)=>`
+            <div class='col s6 m3 octet-wrapper'>
+              <div class='octet-number'>Octeto ${i+1}</div>
+              <div class='octet-decimal'>${m}</div>
+              <div class='binary-box'>${pad8(m)}</div>
+            </div>`).join('')}
+        </div>`;
+    }
 
-  function render(result){
-    const ipTable = $('ipTable'); const maskTable = $('maskTable'); const err = $('error');
-    ipTable.innerHTML=''; maskTable.innerHTML=''; err.textContent='';
-    if(result.error){ err.textContent = result.error; ipTable.innerHTML='<tr><td colspan="3" class="muted">Erro</td></tr>'; maskTable.innerHTML='<tr><td colspan="2" class="muted">Erro</td></tr>'; return; }
+    $('btn').addEventListener('click', ()=>{
+      render(parse($('input').value, $('maskInput').value));
+    });
 
-    const ip = result.ip;
-    // IP table rows
-    for(let i=0;i<4;i++){ const dec = ip[i]; const bin = pad8(dec); const tr = document.createElement('tr'); tr.innerHTML = `<td>Octeto ${i+1}</td><td>${dec}</td><td class="octet-binary">${bin}</td>`; ipTable.appendChild(tr); }
+  </script>
 
-    // Mask rows
-    const mask = result.mask; const prefix = result.prefix;
-    const dotted = mask.join('.')
-    const binOctets = mask.map(n=>pad8(n));
-    maskTable.innerHTML += `<tr><td>Prefixo</td><td>/${prefix}</td></tr>`;
-    maskTable.innerHTML += `<tr><td>Máscara (decimal)</td><td>${dotted}</td></tr>`;
-    maskTable.innerHTML += `<tr><td>Máscara (binário)</td><td>${binOctets.map(b=>`<span class="octet-binary">${b}</span>`).join(' ')}</td></tr>`;
-
-  }
-
-  // Wire up
-  const input = $('input'); const maskInput = $('maskInput'); const btn = $('btn');
-  function go(){ const parsed = parseInput(input.value, maskInput.value); render(parsed); }
-  btn.addEventListener('click', go);
-
-  // also update on Enter key
-  [input, maskInput].forEach(el=>el.addEventListener('keydown', e=>{ if(e.key==='Enter'){ go(); } }));
-
-  // Small demo default
-  input.value = '192.168.10.5/24'; go();
-</script>
 </body>
 </html>
